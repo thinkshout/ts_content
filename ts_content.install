@@ -1,0 +1,16 @@
+<?php
+/**
+ * @file
+ * ts_content.install
+ */
+
+/**
+ * Implements hook_disable().
+ */
+function ts_content_disable() {
+  // Deregister migrations.
+  $info = ts_content_get_info();
+  foreach ($info as $migration_name => $settings) {
+    Migration::deregisterMigration($migration_name);
+  }
+}

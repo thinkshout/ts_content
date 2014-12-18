@@ -1,0 +1,9 @@
+name = Content Creation
+description = Content creation using Migrate and Google Spreadsheet/JSON
+package = ThinkShout
+core = 7.x
+version = 7.x-1.x
+
+files[] = ts_content.migrate.inc
+files[] = ts_content.migrations.inc
+files[] = includes/destination.inc

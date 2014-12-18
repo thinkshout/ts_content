@@ -1,0 +1,113 @@
+<?php
+/**
+ * @file
+ * Content import using migrate from Google Spreadsheet/JSON
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function ts_content_menu() {
+  $items = array();
+
+  $items['admin/ts-content/jsonify/%/%/%/feed.json'] = array(
+    'page callback' => 'ts_content_jsonify',
+    'page arguments' => array(3, 4, 5),
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback to convert google spreadsheet json into more usable JSON.
+ *
+ * Note: Not currently used by existing code.
+ *
+ * @param string $migration_name
+ *   Name of the migration.
+ * @param string $key
+ *   Key that identifies the spreadsheet.
+ * @param int $sheet
+ *   Delta of the spreadsheet tab.
+ */
+function ts_content_jsonify($migration_name, $key, $sheet) {
+  $url = "https://spreadsheets.google.com/feeds/list/" . $key . "/" . $sheet . "/public/values?alt=json";
+  // Grab the whole json object at once. Won't work well with BIG spreadsheets.
+  $request = drupal_http_request($url);
+
+  if (in_array($request->code, array(200, 304))) {
+    $info = ts_content_get_info($migration_name);
+    if ($info) {
+      $data = drupal_json_decode($request->data);
+      $rows = array();
+
+      // Actual values are under feed->entry.
+      foreach ($data['feed']['entry'] as $entry) {
+        $row = array();
+        // Extract just the column data (they begin with gsx$).
+        $f = array_filter(array_keys($entry), function ($k){
+          return strpos($k, 'gsx$') !== FALSE;
+        });
+        $columns = array_intersect_key($entry, array_flip($f));
+
+        foreach ($columns as $col => $val) {
+          // Get just the name portion of the column name.
+          list(,$column) = explode('$', $col);
+
+          // Extract the value.
+          $value = !empty($val['$t']) ? $val['$t'] : NULL;
+          $row[$column] = $value;
+        }
+        $rows[] = $row;
+      }
+
+      drupal_json_output($rows);
+    }
+  }
+}
+
+/**
+ * Allow other modules to define migrations using ts_content.
+
+ * @return array
+ *   Array of migration information. Can be looped through and used in a
+ *   hook_migrate_api() implementation.
+ */
+function ts_content_get_info() {
+  $ts_content_info = module_invoke_all('ts_content_info');
+
+  foreach ($ts_content_info as $name => $data) {
+    $ts_content_info[$name] += array(
+      'class' => NULL,
+      'type' => NULL,
+      'data_url' => NULL,
+      'fields' => array(),
+    );
+  }
+
+  return $ts_content_info;
+}
+
+/**
+ * Helper to convert date into migrate friendly format.
+ */
+function ts_content_date_convert($date) {
+  // Puts dates into YYYY-MM-DD format.
+  return format_date(strtotime($date), 'custom', 'Y-m-d');
+}
+
+/**
+ * Helper to convert y/n values for Author -> expert field into boolean.
+ */
+function ts_content_boolean_convert($bool) {
+  // Puts Y/N && yes/no, into 1/0 format.
+  $bool = strtolower(substr($bool, 0, 1));
+  switch ($bool) {
+    case 'y':
+      return 1;
+
+    case 'n':
+      return 0;
+  }
+}
