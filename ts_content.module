@@ -5,69 +5,6 @@
  */
 
 /**
- * Implements hook_menu().
- */
-function ts_content_menu() {
-  $items = array();
-
-  $items['admin/ts-content/jsonify/%/%/%/feed.json'] = array(
-    'page callback' => 'ts_content_jsonify',
-    'page arguments' => array(3, 4, 5),
-    'access arguments' => array('access content'),
-  );
-
-  return $items;
-}
-
-/**
- * Page callback to convert google spreadsheet json into more usable JSON.
- *
- * Note: Not currently used by existing code.
- *
- * @param string $migration_name
- *   Name of the migration.
- * @param string $key
- *   Key that identifies the spreadsheet.
- * @param int $sheet
- *   Delta of the spreadsheet tab.
- */
-function ts_content_jsonify($migration_name, $key, $sheet) {
-  $url = "https://spreadsheets.google.com/feeds/list/" . $key . "/" . $sheet . "/public/values?alt=json";
-  // Grab the whole json object at once. Won't work well with BIG spreadsheets.
-  $request = drupal_http_request($url);
-
-  if (in_array($request->code, array(200, 304))) {
-    $info = ts_content_get_info($migration_name);
-    if ($info) {
-      $data = drupal_json_decode($request->data);
-      $rows = array();
-
-      // Actual values are under feed->entry.
-      foreach ($data['feed']['entry'] as $entry) {
-        $row = array();
-        // Extract just the column data (they begin with gsx$).
-        $f = array_filter(array_keys($entry), function ($k){
-          return strpos($k, 'gsx$') !== FALSE;
-        });
-        $columns = array_intersect_key($entry, array_flip($f));
-
-        foreach ($columns as $col => $val) {
-          // Get just the name portion of the column name.
-          list(,$column) = explode('$', $col);
-
-          // Extract the value.
-          $value = !empty($val['$t']) ? $val['$t'] : NULL;
-          $row[$column] = $value;
-        }
-        $rows[] = $row;
-      }
-
-      drupal_json_output($rows);
-    }
-  }
-}
-
-/**
  * Allow other modules to define migrations using ts_content.
 
  * @return array
