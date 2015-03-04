@@ -1,8 +1,12 @@
 name = Content Creation
-description = Content creation using Migrate and Google Spreadsheet/JSON
+description = Content creation using Migrate and Google Spreadsheets
 package = ThinkShout
 core = 7.x
 version = 7.x-1.x
+
+dependencies[] = migrate
+dependencies[] = migrate_ui
+dependencies[] = migrate_extras
 
 files[] = ts_content.migrate.inc
 files[] = ts_content.migrations.inc
