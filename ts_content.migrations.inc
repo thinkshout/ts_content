@@ -15,8 +15,7 @@ abstract class TSContentMigration extends XMLMigration {
    * you're using a version of the Migrate module < 2.6.
    */
   public function __construct($arguments) {
-    $this->arguments = $arguments;
-    parent::__construct();
+    parent::__construct($arguments);
 
     // With migrate_ui enabled, migration pages will indicate people involved in
     // the particular migration, with their role and contact info. We default
