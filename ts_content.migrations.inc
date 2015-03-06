@@ -283,7 +283,7 @@ class TSMenuLinkMigration extends TSXMLContentMigration {
       $attributes['rel'] = $entity->attribute_rel;
     }
     if (!empty($entity->attribute_class)) {
-      $attributes['class'] = $entity->attribute_class;
+      $attributes['class'] = array($entity->attribute_class);
     }
     if (!empty($entity->attribute_style)) {
       $attributes['style'] = $entity->attribute_style;
