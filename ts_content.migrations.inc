@@ -459,7 +459,13 @@ class TSFieldCollectionMigration extends TSXMLContentMigration {
       $this->createCustomFieldMapping($arguments['fields']);
       $this->createMigrationSource($arguments['data_url'], $arguments['fields']);
 
-      $this->destination = new MigrateDestinationFieldCollection($arguments['type'], array('host_entity_type' => 'bean'));
+      if (isset($arguments['host_entity_type'])) {
+        $host_entity_type = $arguments['host_entity_type'];
+      } else {
+        // default to 'bean' for backwards compatibility.
+        $host_entity_type = 'bean';
+      }
+      $this->destination = new MigrateDestinationFieldCollection($arguments['type'], array('host_entity_type' => $host_entity_type));
     }
   }
 }
