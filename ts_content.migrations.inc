@@ -95,6 +95,12 @@ abstract class TSContentMigration extends XMLMigration {
     }
   }
 
+  protected function postImport() {
+    if (isset($this->arguments['post_migration'])) {
+      call_user_func($this->arguments['post_migration']);
+    }
+  }
+
   /**
    * Instantiates a migration source class.
    *
