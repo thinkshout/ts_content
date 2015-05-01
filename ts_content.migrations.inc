@@ -391,7 +391,6 @@ class TSBeanMigration extends TSXMLContentMigration {
 
 /**
  * Migrate User content
- * @todo: Populate this class.
  */
 class TSUserMigration extends TSXMLContentMigration {
   /**
@@ -401,6 +400,29 @@ class TSUserMigration extends TSXMLContentMigration {
    */
   public function __construct(array $arguments) {
     parent::__construct($arguments);
+
+    $this->description = t('Users');
+
+    if (!isset($arguments['map_source_key'])) {
+      $arguments['map_source_key'] = array(
+        'id' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+      );
+    }
+
+    $this->createCustomFieldMapping($arguments['fields']);
+    $this->createMigrationSource($arguments['data_url'], $arguments['fields']);
+
+    $this->map = new MigrateSQLMap(
+      $this->machineName,
+      $arguments['map_source_key'],
+      MigrateDestinationUser::getKeySchema()
+    );
+
+    $this->destination = new MigrateDestinationUser();
   }
 }
 
