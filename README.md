@@ -2,6 +2,9 @@
 
 Importing default content using migrate module and google spreadsheets.
 
+To make the Google doc available to the migrate module:
+```File->Publish to Web->Entire Document```
+
 After updating migration mappings re-register the migrations with:
 
 ```
