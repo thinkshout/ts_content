@@ -491,3 +491,49 @@ class TSFieldCollectionMigration extends TSXMLContentMigration {
     }
   }
 }
+
+/**
+ * Migrate EntityForm content
+ */
+class TSEntityFormMigration extends TSXMLContentMigration {
+  /**
+   * Constructor.
+   *
+   * {@inheritdoc}
+   */
+  public function __construct(array $arguments) {
+    parent::__construct($arguments);
+
+    $this->description = t('Entity Form');
+
+    // Map for the migration:
+    // @TODO should be handled by merging in default values in the hook.
+    if (!isset($arguments['map_source_key'])) {
+      $arguments['map_source_key'] = array(
+        'id' => array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ),
+      );
+    }
+
+    $this->map = new MigrateSQLMap(
+      $this->machineName,
+      $arguments['map_source_key'],
+      MigrateDestinationEntityForm::getKeySchema('entityform')
+    );
+
+    $this->createCustomFieldMapping($arguments['fields']);
+
+    $this->createMigrationSource($arguments['data_url'], $arguments['fields'], array('data'));
+
+    $this->destination = new MigrateDestinationEntityForm('entityform', $arguments['type']);
+  }
+
+  /**
+   * Modify data before it is saved.
+   */
+  public function prepare($node, stdClass $row) {
+  }
+}

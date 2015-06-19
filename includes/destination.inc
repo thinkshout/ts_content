@@ -54,3 +54,29 @@ class MigrateDestinationMenuLinksWithAttributes extends MigrateDestinationMenuLi
     return $fields;
   }
 }
+
+/**
+ * Class MigrateDestinationEntityForm
+ *
+ * See: https://drupal.org/node/2141211
+ */
+class MigrateDestinationEntityForm extends MigrateDestinationEntityAPI {
+  /**
+   * Basic initialization.
+   *
+   * @param string $entity_type
+   * @param string $bundle
+   * @param array $options
+   *  Options (language, text_format) used for creating fields.
+   */
+  public function __construct($entity_type, $bundle, array $options = array()) {
+    parent::__construct($entity_type, $bundle, $options);
+    $this->id = $this->info['entity keys']['id'];
+  }
+
+  public function fields() {
+    $fields = parent::fields();
+
+    return $fields;
+  }
+}
