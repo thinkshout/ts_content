@@ -5,7 +5,7 @@
  *
  * See: https://drupal.org/node/2141211
  */
-class MigrateDestinationBean extends MigrateDestinationEntityAPI {
+class MigrateDestinationBean extends MigrateDestinationEntity {
   /**
    * Info about the current entity type.
    *

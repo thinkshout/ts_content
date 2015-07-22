@@ -369,7 +369,7 @@ class TSBeanMigration extends TSXMLContentMigration {
 
     $this->createMigrationSource($arguments['data_url'], $arguments['fields'], array('data'));
 
-    $this->destination = new MigrateDestinationBean('bean', $arguments['type']);
+    $this->destination = new MigrateDestinationBean($arguments['type']);
   }
 
   /**
