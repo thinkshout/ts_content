@@ -3,7 +3,8 @@
 /**
  * Class MigrateDestinationBean
  *
- * See: https://drupal.org/node/2141211
+ * See: https://drupal.org/node/2141211 and https://www.drupal.org/node/2295973
+ * Code below was lifted from https://www.drupal.org/files/issues/bean-migrate-support-2295973-7.patch
  */
 class MigrateDestinationBean extends MigrateDestinationEntity {
   /**
@@ -44,7 +45,8 @@ class MigrateDestinationBean extends MigrateDestinationEntity {
 
     // Override this for beans, otherwise it would be name key (delta) taken as
     // id. For beans to be updated we need to set id as bid instead of name.
-    $this->id = $this->info['entity keys']['id'];
+    //@TODO - commented out from original patch - don't think this is necessary, but not totally sure.
+//    $this->id = $this->info['entity keys']['id'];
   }
 
   /**
@@ -247,10 +249,11 @@ class MigrateDestinationBean extends MigrateDestinationEntity {
    */
   public function prepare($entity, stdClass $source_row) {
     parent::prepare($entity, $source_row);
-    // Override delta with our own provided with the same id as in the source.
-    if (isset($source_row->id)) {
-      $entity->delta = $source_row->id;
-    }
+// @TODO - commented out from original patch - don't think this is necessary, but not totally sure.
+//    // Override delta with our own provided with the same id as in the source.
+//    if (isset($source_row->id)) {
+//      $entity->delta = $source_row->id;
+//    }
   }
 
   /**
