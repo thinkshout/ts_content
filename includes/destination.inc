@@ -45,8 +45,10 @@ class MigrateDestinationBean extends MigrateDestinationEntity {
 
     // Override this for beans, otherwise it would be name key (delta) taken as
     // id. For beans to be updated we need to set id as bid instead of name.
-    //@TODO - commented out from original patch - don't think this is necessary, but not totally sure.
-//    $this->id = $this->info['entity keys']['id'];
+    //
+    // More specifically the destid1 column requires an int, which delta is not,
+    // but id is.
+    $this->id = $this->info['entity keys']['id'];
   }
 
   /**
