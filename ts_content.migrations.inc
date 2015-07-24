@@ -214,10 +214,11 @@ class TSNodeMigration extends TSXMLContentMigration {
     if (module_exists('workbench_moderation')) {
       $entity->revision = FALSE;
       $entity->is_new = !(isset($entity->nid) && ($entity->nid));
-      $entity->workbench_moderation_state_current = 'published';
-      $entity->workbench_moderation_state_new = 'published';
+      if ($entity->status) {
+        $entity->workbench_moderation_state_current = 'published';
+        $entity->workbench_moderation_state_new = 'published';
+      }
     }
-
   }
 }
 
