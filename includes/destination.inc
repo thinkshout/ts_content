@@ -106,6 +106,7 @@ class MigrateDestinationBean extends MigrateDestinationEntity {
 
     // Then add in anything provided by handlers.
     $fields += migrate_handler_invoke_all('Entity', 'fields', $this->entityType, $this->bundle);
+    $fields['view_mode'] = 'View Mode';
 
     return $fields;
   }
