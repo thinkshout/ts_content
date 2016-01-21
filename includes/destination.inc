@@ -252,11 +252,10 @@ class MigrateDestinationBean extends MigrateDestinationEntity {
    */
   public function prepare($entity, stdClass $source_row) {
     parent::prepare($entity, $source_row);
-// @TODO - commented out from original patch - don't think this is necessary, but not totally sure.
-//    // Override delta with our own provided with the same id as in the source.
-//    if (isset($source_row->id)) {
-//      $entity->delta = $source_row->id;
-//    }
+    // Override delta with our own provided delta, if we have one.
+    if (!empty($source_row->delta)) {
+     $entity->delta = $source_row->delta;
+    }
   }
 
   /**
