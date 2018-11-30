@@ -284,8 +284,8 @@ class MigrateDestinationMenuLinksWithAttributes extends MigrateDestinationMenuLi
     parent::__construct();
   }
 
-  public function fields() {
-    $fields = parent::fields();
+  public function fields($migration = NULL) {
+    $fields = parent::fields($migration);
 
     $fields['attribute_id'] = 'Attribute: id';
     $fields['attribute_name'] = 'Attribute: name';
@@ -318,8 +318,8 @@ class MigrateDestinationEntityForm extends MigrateDestinationEntityAPI {
     $this->id = $this->info['entity keys']['id'];
   }
 
-  public function fields() {
-    $fields = parent::fields();
+  public function fields($migration = NULL) {
+    $fields = parent::fields($migration);
 
     return $fields;
   }
