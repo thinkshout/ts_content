@@ -10,4 +10,5 @@ dependencies[] = migrate_extras
 
 files[] = ts_content.migrate.inc
 files[] = ts_content.migrations.inc
+files[] = ts_content.migrations.v4.inc
 files[] = includes/destination.inc
